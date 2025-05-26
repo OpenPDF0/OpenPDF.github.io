@@ -380,64 +380,15 @@ def logout():
     flash('Você foi desconectado.', 'info')
     return redirect(url_for('login'))
 
-
-@app.route('/google_login_callback')
+@app.route("/google_login_callback")
 def google_login_callback():
     if not google.authorized:
-        flash('Login com Google falhou ou foi cancelado.', 'danger')
-        return redirect(url_for('login'))
-
-    try:
-        resp = google.get("/oauth2/v2/userinfo")
-        resp.raise_for_status()  # Levanta erro para status 4xx/5xx
-
-        user_info = resp.json()
-        google_email = user_info['email']
-        # Tenta pegar o nome, senão usa parte do email
-        google_username = user_info.get('name', google_email.split('@')[0])
-
-        # Verificar se o usuário já existe no seu banco de dados
-        existing_user = auth.verificar_usuario(
-            google_email, "google_login_placeholder")  # Use um placeholder para a senha
-
-        if isinstance(existing_user, dict):
-            # Usuário já existe, faça login
-            session['usuario'] = existing_user['username']
-            session['email'] = google_email
-            flash('Login com Google realizado com sucesso!', 'success')
-            return redirect(url_for('index'))
-        else:
-            # Usuário não existe, cadastre-o
-            # Como não temos uma senha real do Google, gere uma aleatória ou use um placeholder para o DB
-            # É crucial que essa "senha" seja tratada apenas internamente e nunca solicitada ao usuário
-            # Gera uma senha aleatória segura
-            dummy_password = os.urandom(16).hex()
-            registration_response = auth.cadastrar_usuario(
-                google_username, google_email, dummy_password)
-
-            if isinstance(registration_response, dict) and registration_response.get('success'):
-                session['usuario'] = google_username
-                session['email'] = google_email
-                flash('Conta Google criada e login realizado com sucesso!', 'success')
-                return redirect(url_for('index'))
-            else:
-                flash(
-                    f'Erro ao cadastrar usuário Google: {registration_response}', 'danger')
-                print(
-                    f"[ERRO] Falha no cadastro Google: {registration_response}")
-                # Redireciona para cadastro em caso de falha
-                return redirect(url_for('cadastro'))
-
-    except requests.exceptions.RequestException as e:
-        flash(f'Erro ao comunicar com a API do Google: {e}', 'danger')
-        print(f"[ERRO] Erro na API do Google: {e}")
-    except KeyError:
-        flash('Não foi possível obter informações do usuário Google. Tente novamente.', 'danger')
-    except Exception as e:
-        flash(f'Erro inesperado no login Google: {e}', 'danger')
-        print(f"[ERRO] Erro inesperado no login Google: {e}")
-
-    return redirect(url_for('login'))
+        return redirect(url_for("google.login"))
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    user_info = resp.json()
+    # ... faça login/cadastro do usuário ...
+    return redirect(url_for("index"))
 
 
 @app.route('/pastas_do_usuario')
