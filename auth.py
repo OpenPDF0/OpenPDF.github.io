@@ -107,23 +107,5 @@ def verificar_usuario(email, senha):
             conn.close()
 
 if __name__ == '__main__':
-    # Este bloco é para testes manuais. Não será executado quando importado pelo script.py
     print("Executando testes do auth.py...")
     criar_tabela()
-
-    # Exemplo de uso (descomente para testar)
-    # print("Tentando cadastrar usuário 'teste@teste.com'...")
-    # response_cadastro = cadastrar_usuario("Teste User", "teste@teste.com", "senha123")
-    # print(response_cadastro)
-
-    # print("\nTentando verificar usuário 'teste@teste.com'...")
-    # response_verificacao = verificar_usuario("teste@teste.com", "senha123")
-    # print(response_verificacao)
-
-    # print("\nTentando verificar usuário com senha incorreta...")
-    # response_verificacao_fail = verificar_usuario("teste@teste.com", "senhaerrada")
-    # print(response_verificacao_fail)
-
-    # print("\nTentando verificar usuário não cadastrado...")
-    # response_verificacao_nao_cadastrado = verificar_usuario("naocadastrado@example.com", "senha123")
-    # print(response_verificacao_nao_cadastrado)
