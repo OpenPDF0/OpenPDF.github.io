@@ -2,10 +2,10 @@ import os
 
 # Configurações do Banco de Dados (IDEALMENTE via variáveis de ambiente)
 DB_CONFIG = {
-    'dbname': os.getenv('DB_NAME', 'openpdf'),
+    'dbname': os.getenv('DB_NAME', 'openpdf_80bpdf'),
     'user': os.getenv('DB_USER', 'matheus'),
-    'password': os.getenv('DB_PASSWORD', '5G512TTVAed8DoLDEkcLfUiz3tWfVgzF'), # Trocar por variável de ambiente!
-    'host': os.getenv('DB_HOST', 'dpg-d0ps62be5dus73e5713g-a.oregon-postgres.render.com'),
+    'password': os.getenv('DB_PASSWORD', 'vazO5c42LoRjDeWA0bgimYkptlCzWsoC'), # Trocar por variável de ambiente!
+    'host': os.getenv('DB_HOST', 'dpg-d0pu4guuk2gs73a1k1b0-a.oregon-postgres.render.com'),
     'port': os.getenv('DB_PORT', 5432)
 }
 
