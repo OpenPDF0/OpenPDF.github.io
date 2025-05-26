@@ -556,4 +556,4 @@ if __name__ == '__main__':
         lixeira_cleaner_thread.start()
 
     # debug=True ativa o modo de desenvolvimento e o auto-reload
-    app.run(debug=True)
+    app.run(debug=False)
