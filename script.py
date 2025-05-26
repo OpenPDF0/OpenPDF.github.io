@@ -556,4 +556,4 @@ if __name__ == '__main__':
         lixeira_cleaner_thread.start()
 
     # debug=True ativa o modo de desenvolvimento e o auto-reload
-    pp.run(debug=False, port=10000)
+    app.run(debug=False, port=10000)
