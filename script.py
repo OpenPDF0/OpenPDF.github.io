@@ -34,7 +34,6 @@ google_bp = make_google_blueprint(
     client_id=GOOGLE_OAUTH_CLIENT_ID,  # Usando do config.py
     client_secret=GOOGLE_OAUTH_CLIENT_SECRET,  # Usando do config.py
     scope=["profile", "email"],
-    redirect_url="/google_login_callback"  # Adicionado para especificar o callback
 )
 # Ajustado o url_prefix se necessário
 app.register_blueprint(google_bp, url_prefix="/login")
