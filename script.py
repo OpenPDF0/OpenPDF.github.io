@@ -379,7 +379,7 @@ def logout():
     flash('Você foi desconectado.', 'info')
     return redirect(url_for('login'))
 
-@app.route("/google_login_callback")
+@app.route("/login/google/authorized")
 def google_login_callback():
     if not google.authorized:
         return redirect(url_for("google.login"))
