@@ -1,0 +1,74 @@
+/* searchbar.css */
+
+.search-container {
+    width: 100%;
+    max-width: 400px; /* Largura máxima para o container da busca */
+    margin: 0 auto; /* Centraliza */
+    padding: 10px 0;
+}
+
+.search-form {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 25px; /* Bordas arredondadas */
+    overflow: hidden; /* Garante que o conteúdo não saia das bordas arredondadas */
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra suave */
+}
+
+.search-input {
+    border: none;
+    flex-grow: 1; /* Ocupa o máximo de espaço possível */
+    padding: 10px 15px;
+    font-size: 1rem;
+    outline: none; /* Remove a borda de foco padrão */
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.search-button {
+    background-color: #007bff; /* Azul primário */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* Azul mais escuro no hover */
+}
+
+.search-button i {
+    font-size: 1.2rem; /* Tamanho do ícone de busca */
+}
+
+/* Estilos específicos para o input e botão de busca dentro do controls-container */
+.controls-container .search-input {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.controls-container .search-button {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+/* Responsividade básica para o componente de busca */
+@media (max-width: 600px) {
+    .search-form {
+        flex-direction: column;
+        border-radius: 5px; /* Arredonda tudo em telas menores */
+    }
+    .search-input, .search-button {
+        border-radius: 5px; /* Arredonda os componentes individualmente */
+    }
+    .search-button {
+        margin-top: 5px; /* Espaçamento entre input e botão empilhados */
+    }
+}

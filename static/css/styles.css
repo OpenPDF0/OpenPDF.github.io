@@ -1,0 +1,242 @@
+/* Resetando propriedades padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    height: 100vh;
+}
+
+/* Fundo geral da tela de login */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url("../img/foto.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Container principal com sombra e borda arredondada */
+.login-container {
+    display: flex;
+    width: 900px;
+    height: 500px;
+    background-color: #fff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* Área do formulário (lado esquerdo) */
+.login-form-area {
+    background: linear-gradient(to bottom, #007bff, #0056b3);
+    color: white;
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow-y: auto;
+    justify-content: flex-start;
+}
+
+
+.login-form-area h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    
+}
+
+.login-form-area p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+.login-form-area .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.login-form-area label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #e1e1e1;
+}
+
+.login-form-area input[type="text"],
+.login-form-area input[type="password"],
+.login-form-area input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 100px;
+    padding-left: 20px;
+}
+
+/* Botão animado */
+.login-form-area button {
+    width: 100%;
+    padding: 12px;
+    background-color: #32e67f;
+    border: none;
+    border-radius: 100px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.login-form-area button:hover {
+    background-color: #28b96a;
+    transform: translateY(-0.3px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.login-form-area button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Mensagens de erro */
+.flash-message {
+    color: #ffcccc;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Área da imagem (lado direito) */
+.login-image-area {
+    flex: 1;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-image-area img {
+    max-width: 90%;
+    height: auto;
+}
+
+/* Link de cadastro */
+.cadastro-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
+.cadastro-link a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.cadastro-link a:hover {
+    color: #dcdcdc;
+    text-decoration: underline;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+.titulo-openpdf {
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.titulo-openpdf .open {
+    color: #FFFFFF
+}
+
+.titulo-openpdf .pdf {
+    color: #FF0000
+}
+
+/* Estilo personalizado da barra de rolagem */
+.login-form-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.login-form-area::-webkit-scrollbar-track {
+    background: #004ba0;
+    border-radius: 10px;
+}
+
+.login-form-area::-webkit-scrollbar-thumb {
+    background-color: #66fcf1;
+    border-radius: 10px;
+    border: 2px solid #004ba0;
+}
+
+.login-form-area::-webkit-scrollbar-thumb:hover {
+    background-color: #45a29e;
+}
+
+.botao-voltar {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.botao-voltar:hover {
+    color: #dcdcdc;
+    text-decoration: underline;
+}
+
+.google-login {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* ou 5px se quiser ele bem colado */
+  margin-bottom: 20px; /* opcional, se quiser deixar ele afastado do rodapé */
+}
+
+
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  color: #444;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.google-btn:hover {
+  background: #f1f1f1;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}

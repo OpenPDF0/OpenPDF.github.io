@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - OpenPDF</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+        <div class="login-form-area">
+          <h1 class="titulo-openpdf">
+            <span class="open">Open</span><span class="pdf">PDF</span>
+          </h1>
+            <p>Bem-vindo de volta!</p>
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" placeholder="Senha" required>
+                </div>
+
+                <button type="submit" class="btn btn-white btn-animated">Entrar</button>
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-message">
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </form>
+
+            <div class="cadastro-link">
+                <p>Não tem conta? <a href="{{ url_for('cadastro') }}">Cadastre-se aqui</a></p>
+            </div>
+            <div class="google-login">
+                <a href="{{ url_for('google.login') }}" class="google-btn"> 
+                    <img src="{{ url_for('static', filename='img/google-icon.png') }}" alt="Google" class="google-icon">
+                    <span>Entrar com Google</span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="login-image-area">
+            <img src="{{ url_for('static', filename='img/scanner.png') }}" alt="Scanner OpenPDF">
+        </div>
+    </div>
+
+</body>
+</html>

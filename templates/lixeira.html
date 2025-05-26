@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenPDF - Lixeira</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='searchbar.css') }}">
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" data-auto-replace-svg="nest"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="nav-buttons-left">
+                <a href="{{ url_for('index') }}" class="header-btn home-btn">Início</a>
+                <a href="{{ url_for('lixeira.ver_lixeira') }}" class="header-btn trash-btn">Lixeira</a>
+            </div>
+            
+            <div class="header-center-content">
+                <h1 class="titulo-openpdf-normal">OpenPDF</h1>
+                <p>Gerencie seus arquivos na lixeira.</p>
+            </div>
+
+            <div class="header-right-content">
+                 {% if session.get('usuario') %}
+                    <a href="{{ url_for('logout') }}" class="logout-button">Sair</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="lixeira-container">
+        <h1>Lixeira</h1>
+        <div class="lixeira-actions">
+            <a href="{{ url_for('lixeira.esvaziar_lixeira_route') }}" class="action-btn esvaziar-btn" onclick="return confirm('Tem certeza que deseja esvaziar a lixeira? Esta ação é irreversível.');">Esvaziar Lixeira</a>
+        </div>
+
+        {# Exibição de Mensagens Flash #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <ul class="lixeira-lista">
+            {% if arquivos_lixeira %}
+                {% for arquivo in arquivos_lixeira %}
+                    <li>
+                        <span>
+                            {{ arquivo.original_filename }} (Removido em: {{ arquivo.data_remocao.strftime('%Y-%m-%d %H:%M') }})<br>
+                              {% if arquivo.original_relative_folder %}
+                                De: /{{ arquivo.original_relative_folder }}
+                              {% else %}
+                                Da raiz
+                              {% endif %}
+                        </span>
+                        <div>
+                            <a href="{{ url_for('lixeira.restaurar_arquivo_route', lixeira_filename=arquivo.lixeira_filename) }}" class="restaurar">Restaurar</a>
+                            <a href="{{ url_for('lixeira.deletar_permanentemente_route', lixeira_filename=arquivo.lixeira_filename) }}" class="deletar-perm" onclick="return confirm('Tem certeza que deseja deletar permanentemente este arquivo? Esta ação é irreversível.');">Deletar Permanentemente</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p>A lixeira está vazia.</p>
+            {% endif %}
+        </ul>
+
+        <a href="{{ url_for('index') }}" class="voltar-btn">Voltar para Início</a>
+    </main>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>OpenPDF - Arquivos Escaneados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='searchbar.css') }}">
+    {# Ícones Font Awesome, importante para o visual #}
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" data-auto-replace-svg="nest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="nav-buttons-left">
+                <a href="{{ url_for('index') }}" class="header-btn home-btn">Início</a>
+                <a href="{{ url_for('lixeira.ver_lixeira') }}" class="header-btn trash-btn">Lixeira</a>
+            </div>
+
+            <div class="header-center-content">
+                <h1 class="titulo-openpdf-normal">OpenPDF</h1>
+                <p>A agilidade que você precisa, com a praticidade que só nós temos.</p>
+            </div>
+
+            <div class="header-right-content">
+                {% if session.get('usuario') %}
+                <a href="{{ url_for('logout') }}" class="logout-button">Sair</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="controls-container">
+            {# Botão para voltar uma pasta, se não estiver na raiz #}
+            {% if current_path %}
+            {% set parent_path = current_path.rsplit('/', 1)[0] if '/' in current_path else '' %}
+            <a href="{{ url_for('index', path=parent_path) }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+            {% endif %}
+
+            {# Formulário de Upload #}
+            <div class="upload-section">
+                <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data"
+                    class="upload-form">
+                    <input type="hidden" name="current_path" value="{{ current_path }}">
+                    <label for="file-upload" class="custom-file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i> Escolher Arquivo
+                    </label>
+                    <input id="file-upload" type="file" name="file" onchange="this.form.submit();">
+                    {# O upload é submetido automaticamente, não precisa de botão de submit explícito aqui #}
+                </form>
+            </div>
+
+            {# Formulário para Criar Pasta #}
+            <div class="create-folder-section">
+                <form action="{{ url_for('create_folder') }}" method="POST" class="create-folder-form">
+                    <input type="hidden" name="current_path_for_folder" value="{{ current_path }}">
+                    <input type="text" name="nome_pasta" placeholder="Nome da nova pasta" required class="pasta-input">
+                    <button type="submit" class="create-btn">Criar Pasta</button>
+                </form>
+            </div>
+
+            {# NOVO Botão para Ver TODAS as Pastas do Usuário (aponta para pastas_do_usuario.html) #}
+            {# Presume que o endpoint para pastas_do_usuario.html seja 'minhas_pastas' #}
+            <a href="{{ url_for('pastas_do_usuario') }}" class="action-btn create-btn" style="margin-left: 10px;"></a>
+            <i class="fas fa-folder"></i> Ver Todas as Pastas
+            </a>
+
+            {# Formulário de Busca #}
+            <div class="search-container">
+                <form action="{{ url_for('buscar') }}" method="GET" class="search-form">
+                    <input type="text" name="query" placeholder="Buscar arquivos e pastas..." class="search-input"
+                        value="{{ query_busca if query_busca }}">
+                    <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+
+        {# Exibição de Mensagens Flash #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flash-messages">
+            {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="section-title">Conteúdo de: /{{ current_path if current_path else 'raiz' }}</h2>
+
+        {# Exibição de Pastas #}
+        {% if pastas %}
+        <h3 class="subsection-title">Pastas</h3>
+        <div class="folder-grid file-grid"> {# Reutiliza o grid de arquivos para pastas #}
+            {% for pasta in pastas %}
+            <div class="file-card folder-card">
+                <span class="file-icon folder-icon">📁</span>
+                <span class="file-name folder-name">
+                    <a href="{{ url_for('index', path=current_path ~ '/' ~ pasta if current_path else pasta) }}">{{
+                        pasta }}</a>
+                </span>
+                <div class="file-actions">
+                    <a href="{{ url_for('index', path=current_path ~ '/' ~ pasta if current_path else pasta) }}"
+                        class="action-btn view-btn">Abrir</a>
+                    {# Adicionar botões de renomear/deletar pasta se necessário (exemplo sem JS para renomear pasta) #}
+                    {# A rota 'renomear_pasta' precisaria ser criada em script.py #}
+                    {# <form
+                        action="{{ url_for('renomear_pasta', filename=current_path ~ '/' ~ pasta if current_path else pasta) }}"
+                        method="POST" style="display:inline-block;">
+                        <input type="text" name="novo_nome_pasta" placeholder="Novo nome pasta" required
+                            class="input-inline">
+                        <button type="submit" class="action-btn rename-btn">Renomear Pasta</button>
+                    </form> #}
+                    {# <a
+                        href="{{ url_for('deletar_pasta', path=current_path ~ '/' ~ pasta if current_path else pasta) }}"
+                        class="action-btn delete-btn"
+                        onclick="return confirm('Tem certeza que deseja deletar esta pasta e seu conteúdo?');">Deletar
+                        Pasta</a> #}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {# Exibição de Arquivos #}
+        <h3 class="subsection-title">Arquivos</h3>
+        <div class="file-grid">
+            {% if arquivos %}
+            {% for arquivo in arquivos %}
+            <div class="file-card">
+                {% if arquivo.filename.endswith('.png') or arquivo.filename.endswith('.jpg') or
+                arquivo.filename.endswith('.jpeg') %}
+                <img src="{{ url_for('download_file', filename=arquivo.full_path) }}" alt="{{ arquivo.filename }}"
+                    style="max-width:100px;max-height:100px;">
+                {% else %}
+                <span>{{ arquivo.filename }}</span>
+                {% endif %}
+                <div class="file-actions">
+                    <span>{{ arquivo.filename }}</span> <!-- Mostra o nome do arquivo -->
+                    <a href="{{ url_for('download_file', filename=arquivo.full_path) }}" class="action-btn download-btn">Baixar</a>
+                    <a href="{{ url_for('mover_para_lixeira_route', filename=arquivo.full_path) }}" class="action-btn delete-btn" onclick="return confirm('Tem certeza que deseja mover este arquivo para a lixeira?');">Mover para Lixeira</a>
+                    <form action="{{ url_for('renomear_arquivo', filename=arquivo.full_path) }}" method="POST"
+                        style="display:inline-block; margin-left: 5px;">
+                        <input type="text" name="novo_nome" placeholder="Novo nome" required class="input-inline">
+                        <button type="submit" class="action-btn rename-btn">Renomear</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="no-files-message">Nenhum arquivo encontrado nesta pasta.</p>
+            {% endif %}
+        </div>
+
+        <!-- Adicione este bloco onde quiser no seu index.html, por exemplo, antes da lista de arquivos -->
+        <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('static', filename='desktop_app.exe') }}" download>
+                <button class="action-btn download-btn"
+                    style="background:#007bff;color:white;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;">
+                    Baixar App Desktop
+                </button>
+            </a>
+        </div>
+    </main>
+
+    {# Removendo todos os scripts JS relacionados a modais e toogleForm já que o usuário não quer JS #}
+    {# Os scripts de Font Awesome são mantidos para os ícones #}
+    {# As funções JS para modais como abrirModalRenomear, fecharModalRenomear, etc. devem ser removidas daqui #}
+    <script>
+        // Funções JavaScript removidas conforme solicitado
+        // Se você não usa JavaScript, não há necessidade destas funções aqui.
+        // As ações de renomear e criar pastas agora são tratadas diretamente por formulários HTML
+        // que submetem para as rotas Flask.
+    </script>
+</body>
+
+</html>

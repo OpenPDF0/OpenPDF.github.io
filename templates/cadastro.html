@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - OpenPDF</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-form-area">
+
+            <h1 class="titulo-openpdf">
+                <span class="open">Open</span><span class="pdf">PDF</span>
+            </h1>
+
+            <p>Crie sua conta</p>
+
+            <form method="POST" action="{{ url_for('cadastro') }}">
+                <div class="form-group">
+                    <label for="username">Nome:</label>
+                    <input type="text" id="username" name="username" placeholder="Seu nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" placeholder="Senha" minlength="8" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirmar Senha:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirme a senha" minlength="8" required>
+                </div>
+
+                <button type="submit" class="btn btn-white btn-animated">Cadastrar</button>
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-message">
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </form>
+
+            <a href="{{ url_for('login') }}" class="botao-voltar">← Voltar para tela de login</a>
+
+        </div>
+
+        <div class="login-image-area">
+            <img src="{{ url_for('static', filename='img/scanner.png') }}" alt="Scanner OpenPDF">
+        </div>
+    </div>
+</body>
+</html>

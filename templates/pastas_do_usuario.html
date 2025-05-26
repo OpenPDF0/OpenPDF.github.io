@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenPDF - Suas Pastas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='searchbar.css') }}">
+    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" data-auto-replace-svg="nest"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="nav-buttons-left">
+                <a href="{{ url_for('index') }}" class="header-btn home-btn">Início</a>
+                <a href="{{ url_for('lixeira.ver_lixeira') }}" class="header-btn trash-btn">Lixeira</a>
+            </div>
+            
+            <div class="header-center-content">
+                <h1 class="titulo-openpdf-normal">OpenPDF</h1>
+                <p>Gerencie suas pastas.</p>
+            </div>
+
+            <div class="header-right-content">
+                 {% if session.get('usuario') %}
+                    <a href="{{ url_for('logout') }}" class="logout-button">Sair</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="pasta-main"> {# Use a classe pasta-main para o estilo #}
+        <h1>Suas Pastas</h1>
+
+        {# Exibição de Mensagens Flash #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {# Formulário para Criar Nova Pasta (opcional, pode ser movido para index.html) #}
+        <form action="{{ url_for('criar_pasta') }}" method="POST" id="createFolderForm" class="upload-form">
+            <input type="text" name="nome_pasta" class="pasta-input" placeholder="Nome da nova pasta" required>
+            <button type="submit" class="create-btn">Criar Pasta</button>
+        </form>
+
+        <div class="folder-grid file-grid"> {# Reutilize o grid de arquivos para pastas #}
+            {% if pastas %}
+                {% for pasta in pastas %}
+                    <div class="file-card folder-card"> {# Adicione uma classe folder-card para estilo específico se quiser #}
+                        <span class="file-icon folder-icon">📁</span> {# Ícone de pasta #}
+                        <span class="file-name folder-name">{{ pasta }}</span>
+                        <div class="file-actions">
+                            <a href="{{ url_for('index', path=pasta) }}" class="action-btn view-btn">Abrir</a>
+                            {# Adicionar botões de renomear/deletar pasta se necessário #}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-files-message">Nenhuma pasta encontrada.</p>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('index') }}" class="voltar-btn">Voltar para Arquivos</a>
+    </main>
+
+    <script>
+        // Você pode adicionar JS aqui se quiser, como pesquisa de pastas
+        // Mantido apenas o script de Font Awesome para ícones
+    </script>
+</body>
+</html>
