@@ -22,7 +22,7 @@ GOOGLE_OAUTH_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET', 'GOCSPX-eGv
 # PASTA_ARQUIVOS_BASE será definido em script.py usando BASE_DIR + 'arquivos_usuarios'
 
 # URL do servidor Flask para o Desktop App se conectar
-FLASK_SERVER_URL = os.getenv("FLASK_SERVER_URL", "http://127.0.0.1:10000") # Trocar se for para produção
+FLASK_SERVER_URL = os.getenv("FLASK_SERVER_URL", "https://openpdf-8tt8.onrender.com") # Trocar se for para produção
 
 # Configurações da Lixeira (no servidor Flask)
 LIXEIRA_DIAS_RETENCAO = int(os.getenv('LIXEIRA_DIAS_RETENCAO', 30)) # 30 dias por padrão
