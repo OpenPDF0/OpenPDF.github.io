@@ -558,5 +558,9 @@ load_config()
 add_log("Iniciando o aplicativo OpenPDF Desktop. Por favor, faça login.", "info")
 show_login_window()
 
+def login_user(email, password):
+    login_url = f"{FLASK_SERVER_URL}/api/login_desktop" # Mude para a nova rota
+
+
 # Inicia o loop principal do Tkinter
 root.mainloop()
