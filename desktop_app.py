@@ -387,7 +387,11 @@ def show_login_window():
             messagebox.showerror("Erro de Login", "Por favor, preencha todos os campos.")
             return
 
-        response = send_login_request(email, password)
+
+            response = requests.post(
+                "https://openpdf-8tt8.onrender.com",
+                json={"email": email, "password": password}
+            )
         if response and response.get('success'):
             global LOGGED_IN_USER_ID, LOGGED_IN_USERNAME, LOGGED_IN_USER_EMAIL
             LOGGED_IN_USER_ID = response['user']['id']
