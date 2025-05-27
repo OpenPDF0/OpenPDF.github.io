@@ -315,7 +315,10 @@ def upload_file_to_server(file_path, user_id, user_email):
             files = {'file': (file_name, open(file_path, 'rb'), mime_type)}
             data = {'email': user_email}
             response = requests.post(
-                f"{FLASK_SERVER_URL}/login_desktop", files=files, data=data)
+                f"{FLASK_SERVER_URL}/upload_desktop",
+                files={"file": (file_name, open(file_path, "rb"), mime_type)},
+                data={"email": user_email}
+            )
             response.raise_for_status()  # Lança HTTPError para status de erro (4xx ou 5xx)
 
             try:
@@ -467,7 +470,9 @@ def send_login_request(email, password):
     """Envia requisição de login para o servidor Flask."""
     try:
         response = requests.post(
-            f"{FLASK_SERVER_URL}/login_desktop", json={"email": email, "password": password})
+            FLASK_SERVER_URL + "/login_desktop",
+            json={"email": email, "password": password}
+        )
         response.raise_for_status()  # Lança HTTPError para status de erro (4xx ou 5xx)
         return response.json()
     except requests.exceptions.ConnectionError:
