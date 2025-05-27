@@ -15,7 +15,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import bcrypt  # Adicionar esta importação se você for verificar senhas aqui, mas o auth.py já faz isso
 # Importa do config.py
-from config import SECRET_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET
+from config import SECRET_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, FLASK_SERVER_URL
 
 # Caminhos base
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -259,7 +259,8 @@ def renomear_arquivo(filename):
     current_folder_path = os.path.dirname(filename)
 
     # Caminho completo para o novo arquivo (na mesma pasta do antigo)
-    new_file_full_path = os.path.join(os.path.dirname(old_file_full_path), new_filename_secure)
+    new_file_full_path = os.path.join(os.path.dirname(
+        old_file_full_path), new_filename_secure)
 
     # Verifica se o arquivo existe
     if not os.path.exists(old_file_full_path):
@@ -268,10 +269,12 @@ def renomear_arquivo(filename):
 
     try:
         os.rename(old_file_full_path, new_file_full_path)
-        flash(f'Arquivo renomeado para "{new_filename_secure}" com sucesso!', 'success')
+        flash(
+            f'Arquivo renomeado para "{new_filename_secure}" com sucesso!', 'success')
     except Exception as e:
         flash(f'Erro ao renomear arquivo: {e}', 'danger')
-        print(f"[ERRO] Erro ao renomear {filename} para {new_filename_secure}: {e}")
+        print(
+            f"[ERRO] Erro ao renomear {filename} para {new_filename_secure}: {e}")
     return redirect(url_for('index', path=current_folder_path))
 
 
@@ -379,7 +382,8 @@ def logout():
     flash('Você foi desconectado.', 'info')
     return redirect(url_for('login'))
 
-@app.route("/login/google/authorized")
+
+@app.route("/google_login_callback")
 def google_login_callback():
     if not google.authorized:
         return redirect(url_for("google.login"))
