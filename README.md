@@ -75,7 +75,7 @@ venv\Scripts\activate   # Windows
 3. Instale as dependências:
 
 ```bash
-pip install -r requirements.txt
+pip install flask flask-dance requests werkzeug bcrypt python-dotenv pillow watchdog pyinstaller gunicorn psycopg2
 ```
 
 4. Execute o aplicativo:
