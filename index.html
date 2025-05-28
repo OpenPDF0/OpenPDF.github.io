@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentação OpenPDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; max-width: 900px; }
+        h1, h2, h3 { color: #003366; }
+        code { background-color: #f4f4f4; padding: 2px 4px; }
+        pre { background: #f4f4f4; padding: 10px; border-left: 3px solid #ccc; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ccc; margin: 40px 0; }
+    </style>
+</head>
+<body>
+    <h1>Documentação do Sistema OpenPDF</h1>
+    <p><strong>Instituição:</strong> Nome da Instituição</p>
+    <p><strong>Curso:</strong> Nome do Curso</p>
+    <p><strong>Disciplina:</strong> Nome da Disciplina</p>
+    <p><strong>Autor:</strong> Jonathan</p>
+    <p><strong>Data:</strong> Maio de 2025</p>
+    <hr>
+
+    <h2>1. Introdução</h2>
+    <p>O projeto OpenPDF foi desenvolvido com o objetivo de facilitar o trabalho de profissionais que realizam digitalizações e uploads de documentos em larga escala diariamente. O sistema monitora uma pasta local e envia automaticamente arquivos adicionados para um sistema em nuvem, de forma segura e eficiente.</p>
+
+    <h2>2. Documentação do Usuário</h2>
+    <h3>2.1 Objetivo</h3>
+    <p>Automatizar o processo de backup de documentos escaneados para a nuvem.</p>
+
+    <h3>2.2 Funcionalidades</h3>
+    <ul>
+        <li>Monitoramento de pasta local</li>
+        <li>Upload automático</li>
+        <li>Integração com scanner</li>
+        <li>Execução em segundo plano</li>
+        <li>Encerramento fácil</li>
+    </ul>
+
+    <h3>2.3 Benefícios</h3>
+    <ul>
+        <li>Redução de tempo</li>
+        <li>Facilidade de uso</li>
+        <li>Organização e segurança</li>
+        <li>Controle pelo usuário</li>
+    </ul>
+
+    <h2>3. Documentação Técnica</h2>
+    <h3>3.1 Estrutura do Projeto</h3>
+    <pre><code>
+├── desktop_app.py       # Inicializador principal
+├── auth.py              # Autenticação
+├── config.py            # Configurações
+├── lixeira.py           # Organização
+├── script.py            # Utilitários
+├── templates/           # Interface
+└── static/              # Recursos estáticos
+    </code></pre>
+
+    <h3>3.2 Orientações para Desenvolvedores</h3>
+    <ul>
+        <li>UI em <code>templates/</code></li>
+        <li>Lógica de monitoramento em <code>desktop_app.py</code></li>
+        <li>Tokens em <code>auth.py</code></li>
+        <li>Diretórios em <code>config.py</code></li>
+    </ul>
+
+    <h2>4. Documentação de API</h2>
+    <h3>4.1 Bibliotecas</h3>
+    <ul>
+        <li><code>watchdog</code></li>
+        <li><code>tkinter</code></li>
+        <li><code>requests</code></li>
+    </ul>
+
+    <h3>4.2 Uso</h3>
+    <p>Upload por <code>requests.post</code>. Endpoints definidos internamente.</p>
+
+    <h2>5. Instalação</h2>
+    <h3>5.1 Requisitos</h3>
+    <p>Python 3.8+</p>
+
+    <h3>5.2 Passos</h3>
+    <pre><code>
+git clone https://github.com/OpenPDF0/OpenPDF.github.io.git
+cd OpenPDF.github.io
+python -m venv venv
+source venv/bin/activate  # ou venv\\Scripts\\activate
+pip install -r requirements.txt
+python desktop_app.py
+    </code></pre>
+
+    <h2>6. Referências</h2>
+    <ul>
+        <li>ABNT NBR 6023:2023</li>
+        <li><a href="https://www.python.org" target="_blank">Python.org</a></li>
+        <li><a href="https://python-watchdog.readthedocs.io" target="_blank">Watchdog Docs</a></li>
+    </ul>
+</body>
+</html>
