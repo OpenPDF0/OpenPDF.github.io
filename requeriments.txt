@@ -1,0 +1,1 @@
+pip install flask flask-dance requests werkzeug bcrypt python-dotenv pillow watchdog pyinstaller gunicorn psycopg2
