@@ -288,9 +288,14 @@ def deletar_permanentemente_route(lixeira_filename):
 
 @lixeira_bp.route('/esvaziar', methods=['GET'])
 def esvaziar_lixeira_route():
-    # lógica para esvaziar a lixeira
-    # exemplo:
-    # for arquivo in os.listdir(PASTA_LIXEIRA_BASE):
-    #     os.remove(os.path.join(PASTA_LIXEIRA_BASE, arquivo))
-    flash('Lixeira esvaziada com sucesso!', 'success')
+    if 'usuario' not in session:
+        flash('Por favor, faça login para esvaziar a lixeira.', 'danger')
+        return redirect(url_for('login'))
+
+    user_email = session['email']
+    if esvaziar_lixeira(user_email):
+        flash('Lixeira esvaziada com sucesso!', 'success')
+    else:
+        flash('Erro ao esvaziar a lixeira.', 'danger')
+
     return redirect(url_for('lixeira.ver_lixeira'))
