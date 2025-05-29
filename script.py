@@ -166,34 +166,7 @@ def upload_file():
     return redirect(url_for('index', path=current_folder_path))
 
 
-@app.route('/create_folder', methods=['POST'])
-def create_folder():
-    if 'usuario' not in session:
-        flash('Por favor, faça login para criar pastas.', 'danger')
-        return redirect(url_for('login'))
 
-    folder_name = request.form.get('nome_pasta')
-    current_folder_path = request.form.get('current_folder_path', '')
-
-    if not folder_name:
-        flash('O nome da pasta não pode estar vazio.', 'danger')
-        return redirect(url_for('index', path=current_folder_path))
-
-    user_email = session['email']
-    user_folder_name = secure_filename(user_email.split('@')[0])
-
-    target_folder_base = os.path.join(PASTA_ARQUIVOS_BASE, user_folder_name)
-    target_folder_full = os.path.join(
-        target_folder_base, current_folder_path, secure_filename(folder_name))
-
-    try:
-        os.makedirs(target_folder_full, exist_ok=True)
-        flash(f'Pasta "{folder_name}" criada com sucesso!', 'success')
-    except Exception as e:
-        flash(f'Erro ao criar pasta: {e}', 'danger')
-        print(
-            f"[ERRO] Erro ao criar pasta {folder_name} para {user_email}: {e}")
-    return redirect(url_for('index', path=current_folder_path))
 
 
 @app.route('/download/<path:filename>')
@@ -394,28 +367,8 @@ def google_login_callback():
     return redirect(url_for("index"))
 
 
-@app.route('/pastas_do_usuario')
-def pastas_do_usuario():
-    if 'usuario' not in session:
-        flash('Por favor, faça login para ver suas pastas.', 'danger')
-        return redirect(url_for('login'))
 
-    user_email = session['email']
-    user_folder_name = secure_filename(user_email.split('@')[0])
-    user_full_path = os.path.join(PASTA_ARQUIVOS_BASE, user_folder_name)
 
-    folders = []
-    try:
-        for item in os.listdir(user_full_path):
-            item_path = os.path.join(user_full_path, item)
-            if os.path.isdir(item_path):
-                folders.append(item)
-    except Exception as e:
-        flash(f"Erro ao listar pastas: {e}", 'danger')
-        print(f"[ERRO] Erro ao listar pastas para {user_email}: {e}")
-        folders = []
-
-    return render_template('pastas_do_usuario.html', pastas=folders)
 
 
 # <-- Adicionado endpoint='buscar' aqui
@@ -548,6 +501,42 @@ def deletar_arquivo(filename):
     return redirect(url_for('index', path=current_folder_path))
 
 
+
+@app.route('/deletar_multiplos', methods=['POST'])
+def deletar_multiplos():
+    if 'usuario' not in session:
+        flash('Faça login para deletar.', 'danger')
+        return redirect(url_for('login'))
+
+    arquivos_str = request.form.get('arquivos_selecionados', '')
+    arquivos = arquivos_str.split(',') if arquivos_str else []
+
+    user_email = session['email']
+    user_folder = secure_filename(user_email.split('@')[0])
+    sucesso_total = True
+
+    for path in arquivos:
+        try:
+            full_path = os.path.join(PASTA_ARQUIVOS_BASE, user_folder, path)
+            pasta_relativa = os.path.dirname(path)
+
+            if os.path.exists(full_path):
+                resultado = mover_para_lixeira(user_email, full_path, pasta_relativa)
+                if not resultado:
+                    sucesso_total = False
+            else:
+                sucesso_total = False
+        except Exception as e:
+            print(f"[ERRO] Falha ao mover para lixeira: {e}")
+            sucesso_total = False
+
+    if sucesso_total:
+        flash('Arquivos movidos para a lixeira com sucesso!', 'success')
+    else:
+        flash('Alguns arquivos não puderam ser movidos para a lixeira.', 'warning')
+
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     # Inicializa a tabela de usuários ao iniciar a aplicação
     auth.criar_tabela()
@@ -561,3 +550,4 @@ if __name__ == '__main__':
 
     # debug=True ativa o modo de desenvolvimento e o auto-reload
     app.run(debug=False, port=10000)
+
