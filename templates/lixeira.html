@@ -1,74 +1,122 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>OpenPDF - Lixeira</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='searchbar.css') }}">
-    <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" data-auto-replace-svg="nest"></script>
+  <meta charset="UTF-8">
+  <title>OpenPDF - Lixeira</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='searchbar.css') }}">
+  <script src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" data-auto-replace-svg="nest"></script>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="nav-buttons-left">
-                <a href="{{ url_for('index') }}" class="header-btn home-btn">Início</a>
-                <a href="{{ url_for('lixeira.ver_lixeira') }}" class="header-btn trash-btn">Lixeira</a>
-            </div>
-            
-            <div class="header-center-content">
-                <h1 class="titulo-openpdf-normal">OpenPDF</h1>
-                <p>Gerencie seus arquivos na lixeira.</p>
-            </div>
+<header>
+  <div class="header-content">
+    <div class="nav-buttons-left">
+      <a href="{{ url_for('index') }}" class="header-btn home-btn">
+        <i class="fas fa-home"></i> Início
+      </a>
+      <a href="{{ url_for('lixeira.ver_lixeira') }}" class="header-btn trash-btn">
+        <i class="fas fa-trash"></i> Lixeira
+      </a>
+    </div>
+    <div class="header-center-content">
+      <h1 class="titulo-openpdf-normal">OpenPDF</h1>
+      <p>Gerencie seus arquivos na lixeira.</p>
+    </div>
+    <div class="header-right-content">
+      {% if session.get('usuario') %}
+        <a href="{{ url_for('logout') }}" class="logout-button">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</header>
 
-            <div class="header-right-content">
-                 {% if session.get('usuario') %}
-                    <a href="{{ url_for('logout') }}" class="logout-button">Sair</a>
-                {% endif %}
-            </div>
+<main style="max-width: 1000px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.1);">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2 style="color: #2e86de;">🗑 Lixeira</h2>
+    <a href="{{ url_for('lixeira.esvaziar_lixeira_route') }}"
+       class="action-btn delete-btn"
+       onclick="return confirm('Tem certeza que deseja esvaziar a lixeira? Esta ação é irreversível.');">
+      <i class="fas fa-trash-alt"></i> Esvaziar Lixeira
+    </a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-messages">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% if arquivos_lixeira %}
+    <div style="display: grid; gap: 1.5rem;">
+      {% for arquivo in arquivos_lixeira %}
+      <div style="border: 1px solid #ddd; border-radius: 8px; padding: 1rem; background: #f9f9f9; box-shadow: 0 1px 6px rgba(0,0,0,0.05);">
+        <p style="margin: 0 0 0.5rem;"><strong>{{ arquivo.original_filename }}</strong></p>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+          Removido em: {{ arquivo.data_remocao.strftime('%Y-%m-%d %H:%M') }}<br>
+          {% if arquivo.original_relative_folder %}
+            De: /{{ arquivo.original_relative_folder }}
+          {% else %}
+            Da raiz
+          {% endif %}
+        </p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="{{ url_for('lixeira.restaurar_arquivo_route', lixeira_filename=arquivo.lixeira_filename) }}"
+             class="action-btn download-btn">
+            <i class="fas fa-undo"></i> Restaurar
+          </a>
+         <button class="action-btn delete-perm-btn" onclick="abrirConfirmacaoPermanent('{{ url_for('lixeira.deletar_permanentemente_route', lixeira_filename=arquivo.lixeira_filename) }}')">
+  Deletar Permanentemente
+</button>
         </div>
-    </header>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p style="text-align: center; font-style: italic; color: #888;">A lixeira está vazia.</p>
+  {% endif %}
 
-    <main class="lixeira-container">
-        <h1>Lixeira</h1>
-        <div class="lixeira-actions">
-            <a href="{{ url_for('lixeira.esvaziar_lixeira_route') }}" class="action-btn esvaziar-btn" onclick="return confirm('Tem certeza que deseja esvaziar a lixeira? Esta ação é irreversível.');">Esvaziar Lixeira</a>
-        </div>
+  <div style="margin-top: 2rem;">
+    <a href="{{ url_for('index') }}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Voltar para Início
+    </a>
+  </div>
+</main>
 
-        {# Exibição de Mensagens Flash #}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flash-messages">
-                    {% for category, message in messages %}
-                        <li class="{{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+<script>
+let confirmUrlPermanent = null;
 
-        <ul class="lixeira-lista">
-            {% if arquivos_lixeira %}
-                {% for arquivo in arquivos_lixeira %}
-                    <li>
-                        <span>
-                            {{ arquivo.original_filename }} (Removido em: {{ arquivo.data_remocao.strftime('%Y-%m-%d %H:%M') }})<br>
-                              {% if arquivo.original_relative_folder %}
-                                De: /{{ arquivo.original_relative_folder }}
-                              {% else %}
-                                Da raiz
-                              {% endif %}
-                        </span>
-                        <div>
-                            <a href="{{ url_for('lixeira.restaurar_arquivo_route', lixeira_filename=arquivo.lixeira_filename) }}" class="restaurar">Restaurar</a>
-                            <a href="{{ url_for('lixeira.deletar_permanentemente_route', lixeira_filename=arquivo.lixeira_filename) }}" class="deletar-perm" onclick="return confirm('Tem certeza que deseja deletar permanentemente este arquivo? Esta ação é irreversível.');">Deletar Permanentemente</a>
-                        </div>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <p>A lixeira está vazia.</p>
-            {% endif %}
-        </ul>
+function abrirConfirmacaoPermanent(url) {
+  confirmUrlPermanent = url;
+  document.getElementById('confirm-box-perm').classList.remove('hidden');
+  document.getElementById('overlay').classList.remove('hidden');
+}
 
-        <a href="{{ url_for('index') }}" class="voltar-btn">Voltar para Início</a>
-    </main>
+function confirmarAcaoPermanent(sim) {
+  document.getElementById('confirm-box-perm').classList.add('hidden');
+  document.getElementById('overlay').classList.add('hidden');
+  if (sim && confirmUrlPermanent) {
+    window.location.href = confirmUrlPermanent;
+  }
+  confirmUrlPermanent = null;
+}
+</script>
+
+<div id="confirm-box-perm" class="confirm-box hidden">
+  <p>Tem certeza que deseja <strong>deletar permanentemente</strong> este arquivo?<br><small>Esta ação é irreversível.</small></p>
+  <div class="confirm-buttons">
+    <button onclick="confirmarAcaoPermanent(true)">Deletar</button>
+    <button onclick="confirmarAcaoPermanent(false)">Cancelar</button>
+  </div>
+</div>
+<div id="overlay" class="hidden"></div>
+
+
+
 </body>
 </html>
