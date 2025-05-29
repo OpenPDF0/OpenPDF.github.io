@@ -209,34 +209,4 @@ body {
     text-decoration: underline;
 }
 
-.google-login {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px; /* ou 5px se quiser ele bem colado */
-  margin-bottom: 20px; /* opcional, se quiser deixar ele afastado do rodapé */
-}
 
-
-.google-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: white;
-  color: #444;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 30px;
-  border: 1px solid #ccc;
-  text-decoration: none;
-  transition: background 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.google-btn:hover {
-  background: #f1f1f1;
-}
-
-.google-btn img {
-  width: 20px;
-  height: 20px;
-}
